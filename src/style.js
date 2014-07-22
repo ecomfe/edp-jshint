@@ -43,11 +43,28 @@ exports.register = function (linter) {
       return;
     }
 
-    if (data.name.replace(/^_+|_+$/g, "").indexOf("_") > -1 && !data.name.match(/^[A-Z0-9_]*$/)) {
+
+    // 配置一些特征用来忽略那些不符合camelcase的Identifier
+    var identifier = data.name;
+    var camelCaseIgnore = linter.getOption("camelcaseignore") || [];
+    if (camelCaseIgnore.some(check)) {
+      return;
+    }
+
+    function check(item) {
+      if (/^\/.*\/$/.test(item)) {
+        return new RegExp(item.slice(1, -1)).test(identifier);
+      }
+      else {
+        return identifier === item;
+      }
+    }
+
+    if (identifier.replace(/^_+|_+$/g, "").indexOf("_") > -1 && !identifier.match(/^[A-Z0-9_]*$/)) {
       linter.warn("W106", {
         line: data.line,
         char: data.from,
-        data: [ data.name ]
+        data: [ identifier ]
       });
     }
   });

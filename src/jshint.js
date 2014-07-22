@@ -163,6 +163,7 @@ var JSHINT = (function () {
     // These are the JSHint options that can take any value
     // (we use this object to detect invalid options)
     valOptions = {
+      camelcaseignore: false,
       maxlen       : false,
       indent       : false,
       maxerr       : false,
